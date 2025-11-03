@@ -1,4 +1,4 @@
-# 🏥 Health Insurance Agent — Phase 3
+# 🏥 Health Insurance Agent
 
 **An intelligent, local-first health insurance assistant** that predicts medical spending, ranks available insurance plans from CMS 2025 Public Use Files (PUFs), and explains trade-offs in plain English.
 
