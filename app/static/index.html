@@ -1,0 +1,115 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <title>Health Insurance Agent — Phase 3</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet" />
+  <style>
+    :root { --bg:#0f172a; --card:#111827; --ink:#e5e7eb; --muted:#9ca3af; --accent:#22c55e; --border:#1f2937; }
+    * { box-sizing: border-box; }
+    body { margin:0; font-family: Inter, system-ui, -apple-system, Segoe UI, Roboto, "Helvetica Neue", Arial, "Noto Sans", "Apple Color Emoji", "Segoe UI Emoji"; background:var(--bg); color:var(--ink); }
+    header { padding:16px 20px; border-bottom:1px solid var(--border); display:flex; align-items:center; gap:10px; }
+    header h1 { margin:0; font-size:18px; font-weight:600; }
+    main { display:grid; grid-template-columns: 350px 1fr; gap:16px; padding:16px; }
+    .card { background:var(--card); border:1px solid var(--border); border-radius:14px; padding:14px; }
+    .muted { color:var(--muted); }
+    label { display:block; font-size:12px; color:var(--muted); margin-bottom:6px; }
+    input, select { width:100%; padding:10px 12px; border-radius:10px; border:1px solid var(--border); background:#0b1220; color:var(--ink); }
+    .row { display:grid; grid-template-columns: 1fr 1fr; gap:10px; }
+    button { background:var(--accent); color:#04130a; border:none; border-radius:10px; padding:10px 14px; font-weight:600; cursor:pointer; }
+    button:disabled { opacity:0.6; cursor:not-allowed; }
+    .plans { display:grid; gap:10px; }
+    .plan { border:1px solid var(--border); border-radius:12px; padding:12px; background:#0b1220; }
+    .plan h4 { margin:0 0 4px; font-size:15px; }
+    .plan small { color:var(--muted); }
+    .explanation { white-space:pre-wrap; font-size:14px; line-height:1.4; }
+    .badge { display:inline-block; padding:2px 8px; border-radius:999px; border:1px solid var(--border); font-size:11px; color:var(--muted); }
+    .grid2 { display:grid; grid-template-columns: 1fr 1fr; gap:8px; }
+    .hr { height:1px; background:var(--border); margin:10px 0; }
+    .link { color:#a5b4fc; text-decoration:none; }
+    .link:hover { text-decoration:underline; }
+    .toast { position: fixed; right:12px; bottom:12px; background:#111827; border:1px solid var(--border); color:var(--ink); padding:10px 12px; border-radius:12px; display:none; }
+    .flex { display:flex; gap:8px; align-items:center; }
+    .nowrap { white-space: nowrap; }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Health Insurance Agent — Phase 3</h1>
+    <span class="badge">local demo</span>
+  </header>
+
+  <main>
+    <section class="card">
+      <h3 style="margin:0 0 8px;">Profile</h3>
+      <div class="row">
+        <div>
+          <label>Age</label>
+          <input id="age" type="number" min="0" value="40" />
+        </div>
+        <div>
+          <label>Sex</label>
+          <select id="sex">
+            <option value="female">female</option>
+            <option value="male">male</option>
+          </select>
+        </div>
+      </div>
+      <div class="row" style="margin-top:8px;">
+        <div>
+          <label>ZIP code</label>
+          <input id="zip" value="49457" />
+        </div>
+        <div>
+          <label>Smoker</label>
+          <select id="smoker">
+            <option value="false">No</option>
+            <option value="true">Yes</option>
+          </select>
+        </div>
+      </div>
+      <div class="row" style="margin-top:8px;">
+        <div>
+          <label>BMI</label>
+          <input id="bmi" type="number" step="0.1" value="26" />
+        </div>
+        <div>
+          <label>Children</label>
+          <input id="children" type="number" min="0" value="1" />
+        </div>
+      </div>
+      <div class="row" style="margin-top:8px;">
+        <div>
+          <label>Metal preference (optional)</label>
+          <select id="metalPref" multiple>
+            <option>Silver</option>
+            <option>Gold</option>
+            <option>Bronze</option>
+            <option>Platinum</option>
+          </select>
+          <small class="muted">Hold Ctrl/Command to select multiple.</small>
+        </div>
+      </div>
+
+      <div style="margin-top:12px;" class="flex">
+        <button id="btnRecommend">Recommend & Explain</button>
+        <div id="band" class="muted nowrap"></div>
+      </div>
+      <div id="explanation" class="card explanation" style="margin-top:12px; display:none;"></div>
+    </section>
+
+    <section class="card">
+      <h3 style="margin:0 0 8px;">Plans</h3>
+      <div id="plans" class="plans"></div>
+      <div id="empty" class="muted" style="display:none;">No plans to show yet.</div>
+    </section>
+  </main>
+
+  <div class="toast" id="toast"></div>
+
+  <script src="/static/app.js"></script>
+</body>
+</html>

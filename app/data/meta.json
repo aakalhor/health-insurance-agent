@@ -1,0 +1,21 @@
+{
+  "target": "log1p_charges",
+  "inverse_transform": "expm1",
+  "features": [
+    "age",
+    "sex",
+    "bmi",
+    "children",
+    "smoker",
+    "region_northeast",
+    "region_northwest",
+    "region_southeast",
+    "region_southwest"
+  ],
+  "quantiles": {
+    "p25": 0.25,
+    "p50": 0.5,
+    "p75": 0.75
+  },
+  "framework": "lightgbm"
+}

@@ -1,0 +1,11 @@
+[
+  "age",
+  "sex",
+  "bmi",
+  "children",
+  "smoker",
+  "region_northeast",
+  "region_northwest",
+  "region_southeast",
+  "region_southwest"
+]
