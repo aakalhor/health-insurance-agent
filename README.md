@@ -79,9 +79,12 @@ cd health-insurance-agent
 ### 2. Create environment
 ```bash
 python -m venv .venv
-.\.venv\Scriptsctivate    # Windows
-# or
-source .venv/bin/activate   # macOS/Linux
+# Windows PowerShell
+.\.venv\Scripts\Activate
+# Windows CMD
+.\.venv\Scripts\activate.bat
+# macOS/Linux
+source .venv/bin/activate
 ```
 
 ### 3. Install dependencies
@@ -109,6 +112,71 @@ python data_pipeline/build_plans_sqlite.py
 python training/train_spend_model.py
 ```
 Models are saved under `app/data/models/lgb_p25.txt`, `lgb_p50.txt`, `lgb_p75.txt`.
+
+---
+
+## 📊 Model Training, Evaluation & Reporting
+
+### 🧠 Train Spend Prediction Models
+
+Train the quantile LightGBM models (p25, p50, p75) that estimate the 25th, 50th, and 75th percentile of yearly healthcare spending:
+
+```bash
+python training/train_spend_model.py
+```
+
+This script:
+
+- Loads the Kaggle insurance dataset from `app/data/`
+- Builds encoded feature matrices matching `features.json`
+- Trains LightGBM quantile regressors with early stopping
+- Logs pinball loss (log space) and MAE / RMSE / R² in dollars
+
+Saves:
+
+- **Models** → `app/data/models/lgb_p25.txt`, `lgb_p50.txt`, `lgb_p75.txt`
+- **Per-iteration curves** → `training_curves_lgb_25.csv`, `_50.csv`, `_75.csv`
+- **Validation metrics** → `metrics_summary.json`
+
+### 🧾 Evaluate Trained Models
+
+Run the evaluation script to test model performance on a fresh split:
+
+```bash
+python training/eval_spend_model.py
+```
+
+Outputs:
+
+- Test metrics for each quantile (MAE, RMSE, R², pinball loss)
+- Quantile crossing rate (how often p25 ≤ p50 ≤ p75 fails)
+- Saves report → `app/data/models/metrics_eval.json`
+
+Example console output:
+```
+[p25] pinball(log): 0.18621 | MAE: $1,705.33 | RMSE: $3,048.90 | R²: 0.8721
+[p50] pinball(log): 0.18277 | MAE: $1,469.12 | RMSE: $2,995.42 | R²: 0.8766
+[p75] pinball(log): 0.19133 | MAE: $1,982.40 | RMSE: $3,210.71 | R²: 0.8683
+Quantile crossing rate: 2.6% on N=268
+✅ Saved evaluation metrics → app/data/models/metrics_eval.json
+```
+
+### 📈 Generate Visual Report
+
+After training and evaluation, create a combined visualization:
+
+```bash
+python training/plot_training_report.py
+```
+
+Generates:
+
+- Learning curves for p25/p50/p75
+- Bar chart of test MAE values
+- Text summary of validation/test metrics, pinball loss, R², and crossing rate
+- Output image → `app/data/models/report_training_eval.png`
+
+This makes it easy to review how the quantile LightGBM models performed during training and evaluation at a glance.
 
 ---
 
@@ -153,9 +221,17 @@ Then open:
 ## 🧮 Example Request
 
 ```bash
+# Windows PowerShell uses caret ^ for line continuation
 curl -X POST "http://127.0.0.1:8000/recommend" ^
      -H "Content-Type: application/json" ^
      -d "{ \"age\": 40, \"sex\": \"female\", \"zip_code\": \"49457\", \"smoker\": false, \"bmi\": 26, \"children\": 1 }"
+```
+
+```bash
+# Bash/macOS/Linux example
+curl -X POST http://127.0.0.1:8000/recommend \
+  -H "Content-Type: application/json" \
+  -d '{ "age": 40, "sex": "female", "zip_code": "49457", "smoker": false, "bmi": 26, "children": 1 }'
 ```
 
 ### Example Response
